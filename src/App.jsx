@@ -1,34 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import PageNotFound from './pages/NotFound'
+import Players from './pages/Players'
+import Teams from './pages/Teams'
+import AddPoints from './pages/AddPoints'
+import {
+	Box,
+} from '@chakra-ui/react'
 
 function App() {
-  const [count, setCount] = useState(0)
+	return (
+		<Box id="App" background="rgb(32, 33, 36)" color="rgb(248, 249, 250)" height="100%" minHeight="100vh">
+			<Routes>
+				<Route path="/" element={<HomePage />} />
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+				<Route path="/players" element={<Players />} />
+				<Route path="/teams" element={<Teams />} />
+				<Route path="/addpoints" element={<AddPoints />} />
+
+				<Route path="*" element={<PageNotFound />} />
+			</Routes>
+		</Box>
+	)
 }
 
 export default App
