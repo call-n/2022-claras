@@ -15,12 +15,13 @@ import {
 const AddPoints = () => {
     const { documents, error } = useCollection('teams')
     const { updateDocument, response } = useFirestore('teams')
+    const challenges = useCollection('challenges')
 
     // form field values
     const [teams, setTeams] = useState([])
-    const [activity, setActivity] = useState('')
+    const [thechallenges, setTheChallenges] = useState([])
     const [team, setTeam] = useState('')
-    const [points, setPoints] = useState(0)
+    const [thechallenge, setTheChallenge] = useState([])
     const [formError, setFormError] = useState(null)
 
     useEffect(() => {
@@ -31,24 +32,34 @@ const AddPoints = () => {
         }
     }, [documents])
 
+    useEffect(() => {
+        if(challenges.documents) {
+            setTheChallenges(challenges.documents.map(challenges => {
+                return { value: {...challenges, id: challenges.id}, label: challenges.name}
+            }))
+        }
+    }, [challenges.documents])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setFormError(null)
 
-        const theActivity = {
-            activity: activity, 
-            points: points,
-        }
+        const numberCheck = team.value.points+Number(thechallenge.value.points)
 
-        const numberCheck = team.value.points+Number(points)
+        const theActivity = {
+            activity: thechallenge.value.name, 
+            points: thechallenge.value.points,
+        }
 
         const UpdatedTeam = {
             points: numberCheck,
             activities: theActivity,
         }
 
+        console.log(UpdatedTeam);
+
         await updateDocument(team.value.id, UpdatedTeam)
-        alert('den gick igenom')
+        window.location.reload()
     }
 
   return (
@@ -71,25 +82,13 @@ const AddPoints = () => {
                                 options={teams}
                             />
                         </FormLabel>
-                        
-                        <FormLabel>
-                        <span>Aktivitet</span>
-                        <Input
-                            required 
-                            type="text" 
-                            onChange={(e) => setActivity(e.target.value)}
-                            value={activity}
-                        />
-                        </FormLabel>
 
-                        <FormLabel>
-                        <span>Poäng</span>
-                        <Input
-                            required 
-                            type="number" 
-                            onChange={(e) => setPoints(e.target.value)}
-                            value={points}
-                        />
+                        <FormLabel color="black">
+                            <Heading color="white" fontSize="18px">Challenges</Heading>
+                            <Select
+                                onChange={(option) => setTheChallenge(option)}
+                                options={thechallenges}
+                            />
                         </FormLabel>
 
                         <Button
